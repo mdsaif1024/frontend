@@ -12,10 +12,10 @@ const Signup = () => {
     password: Yup
     .string()
     .required('Please Enter your password')
-    .matches(
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/,
-      "Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and One Special Case Character"
-    )
+    // .matches(
+    //   /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/,
+    //   "Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and One Special Case Character"
+    // )
   });
 
     const signupForm = useFormik({
@@ -73,7 +73,7 @@ const Signup = () => {
           >
             <div className="card-body p-5 shadow-5 ">
               <h2 className="fw-bold mb-5">Sign up now</h2>
-              <form>
+              <form onSubmit={signupForm.handleSubmit}>
                 {/* 2 column grid layout with text inputs for the first and last names */}
                 <div className="row">
                   <div className="col-md-12 mb-4">
@@ -83,7 +83,9 @@ const Signup = () => {
                       </label>
                       <input
                         type="text"
-                        id="form3Example1"
+                        id="name"
+                        onChange={signupForm.handleChange}
+                        value={signupForm.values.name}
                         className="form-control"
                       />
                     </div>
@@ -96,7 +98,9 @@ const Signup = () => {
                   </label>
                   <input
                     type="email"
-                    id="form3Example3"
+                    id="email"
+                    onChange={signupForm.handleChange}
+                    value={signupForm.values.email}
                     className="form-control"
                   />
                 </div>
@@ -107,7 +111,9 @@ const Signup = () => {
                   </label>
                   <input
                     type="password"
-                    id="form3Example4"
+                    id="password"
+                    onChange={signupForm.handleChange}
+                    value={signupForm.values.password}
                     className="form-control"
                   />
                 </div>

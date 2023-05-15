@@ -7,7 +7,7 @@ import Konva from "konva";
 import app_config from "../../config";
 const { merchandise, fonts, stickers, dimensions } = configuration;
 
-const AddImage = ({ url, size }) => {
+const AddMockupImage = ({ url, x, y, w, h }) => {
   const imgNode = useRef(null);
 
   const [image] = useImage(url);
@@ -16,10 +16,28 @@ const AddImage = ({ url, size }) => {
   return (
     <Image
       image={image}
-      x={((dimensions.height / 200) * 150) / 2}
-      y={100}
-      width={480}
-      height={500}
+      x={x}
+      y={y}
+      // width={480}
+      // height={500}
+      
+    />
+  );
+};
+
+const AddImage = ({ url, x, y, w, h }) => {
+  const imgNode = useRef(null);
+
+  const [image] = useImage(url);
+  if(image)
+  image.crossOrigin = 'Anonymous';
+  return (
+    <Image
+      image={image}
+      x={x}
+      y={y}
+      width={w}
+      height={h}
       
     />
   );
@@ -45,7 +63,7 @@ const StickerImage = ({ url, size, event }) => {
 const MockupEditor = () => {
   const { merchid } = useParams();
   const [loading, setLoading] = useState(false);
-  const url = app_config.backend_url;
+  const url = app_config.apiUrl;
   const [selMerch, setSelMerch] = useState(null);
   const [addedImages, setAddedImages] = useState([]);
   const [selText, setSelText] = useState(null);
@@ -75,15 +93,15 @@ const MockupEditor = () => {
   };
 
   useEffect(() => {
-    getMerchById((merch) => {
-      // setAddedImages(merch.images.map((img) => <AddImage url={img} />));
-      setAddedImages([<AddImage url={url+'/'+merch.image} />]);
-      console.log(editLayout.current.clientWidth);
-      setEditorDims({
-        width: editLayout.current.clientWidth,
-        height: editLayout.current.clientHeight,
-      });
+    setAddedImages([<AddMockupImage url="/mockups/img3.jpg" x={0} y={0} />, <AddImage url="/mockups/adidas.png" x={450} y={273} w={270} h={270} />]);
+    setEditorDims({
+      width: editLayout.current.clientWidth,
+      height: editLayout.current.clientHeight,
     });
+    // getMerchById((merch) => {
+    //   // setAddedImages(merch.images.map((img) => <AddImage url={img} />));
+    //   console.log(editLayout.current.clientWidth);
+    // });
   }, []);
   
 
@@ -226,7 +244,7 @@ const MockupEditor = () => {
 
   return (
     <div className="col-md-11 mx-auto py-3">
-      <p className="text-center display-1 fw-bold">Merchandise Customizer</p>
+      <p className="text-center display-1 fw-bold">Mockup Designer</p>
       <div className="row">
         <div className="col-3">
           <div className="card">
