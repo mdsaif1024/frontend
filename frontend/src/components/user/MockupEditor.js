@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Stage, Layer, Star, Text, Image, Line } from "react-konva";
+import { Stage, Layer, Star, Text, Image as KonvaImage, Line } from "react-konva";
 import { useNavigate, useParams } from "react-router-dom";
 import configuration from "./data";
 import useImage from "use-image";
@@ -14,7 +14,7 @@ const AddMockupImage = ({ url, x, y, w, h }) => {
   if(image)
   image.crossOrigin = 'Anonymous';
   return (
-    <Image
+    <KonvaImage
       image={image}
       x={x}
       y={y}
@@ -32,7 +32,7 @@ const AddImage = ({ url, x, y, w, h }) => {
   if(image)
   image.crossOrigin = 'Anonymous';
   return (
-    <Image
+    <KonvaImage
       image={image}
       x={x}
       y={y}
@@ -48,7 +48,7 @@ const StickerImage = ({ url, size, event }) => {
 
   const [image] = useImage(url);
   return (
-    <Image
+    <KonvaImage
       image={image}
       x={100}
       y={100}
@@ -61,7 +61,7 @@ const StickerImage = ({ url, size, event }) => {
 };
 
 const MockupEditor = () => {
-  const { merchid } = useParams();
+  const { mockupindex } = useParams();
   const [loading, setLoading] = useState(false);
   const url = app_config.apiUrl;
   const [selMerch, setSelMerch] = useState(null);
@@ -82,18 +82,22 @@ const MockupEditor = () => {
   const stageRef = useRef(null);
   const navigate = useNavigate();
 
-  const getMerchById = async (cb) => {
-    setLoading(true);
-    const response = await fetch(url + "/merch/getbyid/" + merchid);
-    const data = await response.json();
-    setLoading(false);
-    console.log(data);
-    setSelMerch(data);
-    cb(data);
-  };
+  const { mockupData } = app_config;
+
+  const [selMockup, setSelMockup] = useState(mockupData.templates[mockupindex]);
+
+  // const getMerchById = async (cb) => {
+  //   setLoading(true);
+  //   const response = await fetch(url + "/merch/getbyid/" + merchid);
+  //   const data = await response.json();
+  //   setLoading(false);
+  //   console.log(data);
+  //   setSelMerch(data);
+  //   cb(data);
+  // };
 
   useEffect(() => {
-    setAddedImages([<AddMockupImage url="/mockups/img3.jpg" x={0} y={0} />, <AddImage url="/mockups/adidas.png" x={450} y={273} w={270} h={270} />]);
+    setAddedImages([<AddMockupImage url={selMockup.image} x={0} y={0} />]);
     setEditorDims({
       width: editLayout.current.clientWidth,
       height: editLayout.current.clientHeight,
@@ -172,7 +176,8 @@ const MockupEditor = () => {
       path: path,
       size: stickerSize,
     };
-    setAddedStickers([...addedStickers, obj]);
+    
+    // setAddedStickers([...addedStickers, obj]);
   };
 
   const uploadSticker = (e) => {
@@ -180,13 +185,14 @@ const MockupEditor = () => {
     const fd = new FormData();
     // setSelFile(file);
     fd.append("myfile", file);
-    fetch(url + "/util/uploadfile", {
+    fetch("http://localhost:5000/util/uploadfile", {
       method: "POST",
       body: fd,
     }).then((res) => {
       if (res.status === 200) {
         console.log("file uploaded");
-        addSticker(url + "/" + file.name);
+        console.log(url + "/" + file.name);
+        setAddedImages([...addedImages, <AddImage url={url + "/" + file.name} x={selMockup.dimensions.x} y={selMockup.dimensions.y} w={selMockup.dimensions.width} h={selMockup.dimensions.height} />])
       }
     });
   };
@@ -232,12 +238,25 @@ const MockupEditor = () => {
     setLines(lines.slice(0, -1));
   };
 
+  const downloadImage = (imgUrl) => {
+    const link = document.createElement('a');
+    link.href = imgUrl;
+    link.download = 'Mockup.jpg';
+
+    link.click();
+  }
+
   const finalize = () => {
     const uri = stageRef.current.toDataURL();
-    console.log(uri);
-    sessionStorage.setItem("merchData", JSON.stringify(selMerch));
-    sessionStorage.setItem("merchImage", uri);
-    navigate("/user/checkout");
+    // console.log(uri);
+
+    const img = new Image();
+    img.src = uri;
+    img.onload = () => downloadImage(img.src);
+
+    // sessionStorage.setItem("merchData", JSON.stringify(selMerch));
+    // sessionStorage.setItem("merchImage", uri);
+    // navigate("/user/checkout");
   };
 
 
@@ -249,53 +268,12 @@ const MockupEditor = () => {
         <div className="col-3">
           <div className="card">
             <div className="card-header">
-              <h3 className="m-0">Choose Option</h3>
+              <h3 className="m-0">Customize Mockup</h3>
             </div>
             <div className="card-body">
-              <div>
-                <h5>Add Text</h5>
-
-                <textarea
-                  type="text"
-                  className="form-control"
-                  placeholder="Enter Text"
-                  value={textToAdd}
-                  onChange={(e) => setTextToAdd(e.target.value)}
-                ></textarea>
-                <div className="row">
-                  <div className="col-4">
-                  <p className="h6">Size : </p>
-
-                  </div>
-                  <div className="col-8">
-
-                <input
-                  type="number"
-                  className="form-control"
-                  value={textSize}
-                  onChange={(e) => updateTextSize(e.target.value)}
-                  />
-                  </div>
-                </div>
-                <button onClick={addText} className="btn btn-success">Add Text</button>
-              </div>
-              <div>
-                <hr className="mt-4" />
-                <h4>Add Sticker</h4>
-                {stickerSlider()}
-                <div class="range">
-                  <input
-                    type="range"
-                    class="form-range"
-                    min={1}
-                    max={100}
-                    step={1}
-                    value={stickerSize}
-                    onChange={updateStickerSize}
-                  />
-                </div>
-                <label className="btn btn-primary mt-3" htmlFor="uploader">
-                  <i class="fa-solid fa-cloud-arrow-up"></i> Upload Sticker
+             
+                <label className="btn btn-primary mt-3 w-100" htmlFor="uploader">
+                  <i class="fa-solid fa-cloud-arrow-up"></i> Upload Product Image
                 </label>
                 <input
                   hidden
@@ -303,34 +281,14 @@ const MockupEditor = () => {
                   onChange={uploadSticker}
                   id="uploader"
                 />
-              </div>
+              
               <div>
-                <hr className="mt-4" />
-                <h4>Draw</h4>
-                <button className="btn btn-primary" onClick={revertDraw}>
-                  {" "}
-                  <i class="fas fa-arrow-circle-left"></i>{" "}UNDO
-                </button>
-                <button
-                  className="btn btn-primary"
-                  disabled={tool === "pen"}
-                  onClick={() => {
-                    setTool("pen");
-                  }}
-                >
-                  Pen
-                </button>
-                {/* 
-                 */}
-                <button onClick={() => setTool("")} className="btn btn-danger">
-                  Reset
-                </button>
 
                 <button
                   className="btn btn-danger w-100 mt-4"
                   onClick={finalize}
                 >
-                  Order Merch
+                  Download Mockup
                 </button>
               </div>
             </div>

@@ -1,5 +1,5 @@
 const app_config = {
-    apiUrl : 'http://localhost:3000',
+    apiUrl : 'http://localhost:5000',
     mockupData: {
         templates : [
             {
@@ -8,11 +8,12 @@ const app_config = {
               type: 'mobile',
                 image : '/mockups/img6.jpg',
                 dimensions: {
-                  x: 474,
-                  y: 196,
-                  width: 338,
+                  x: 475,
+                  y: 197,
+                  width: 335,
                   height: 490
                 }
+
             },
             {
               name : 'Instagram Mobile Post',
@@ -36,12 +37,12 @@ const app_config = {
               name : 'Instagram Website Post',
               category : 'social-media',
               type: 'desktop',
-                image : '/mockups/img3.jpg',
+                image : '/mockups/img3.png',
                 dimensions: {
-                  x: 414,
-                  y: 273,
-                  width: 502,
-                  height: 278
+                  x: 428,
+                  y: 213,
+                  width: 272,
+                  height: 270
                 }
             },
             {

@@ -4,6 +4,7 @@ const port = 5000;
 
 const userRouter = require('./routers/userRouter');
 const mockupRouter = require('./routers/mockupRouter');
+const utilRouter = require('./routers/util');
 
 const cors = require('cors');
 
@@ -16,6 +17,9 @@ app.use(express.json());
 // middleware
 app.use('/user', userRouter);
 app.use('/mockup', mockupRouter);
+app.use('/util', utilRouter);
+
+app.use(express.static('./static/uploads'));
 
 
 app.get('/', (req, res) => {
