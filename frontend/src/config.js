@@ -3,9 +3,9 @@ const app_config = {
     mockupData: {
         templates : [
             {
-              name : 'Facebook Mobile Post',
-              category : 'social-media',
-              type: 'mobile',
+              name : 'Book',
+              category : 'stationary',
+              type: 'book',
                 image : '/mockups/img6.jpg',
                 dimensions: {
                   x: 475,
@@ -16,9 +16,9 @@ const app_config = {
 
             },
             {
-              name : 'Instagram Mobile Post',
-              category : 'social-media',
-              type: 'mobile',
+              name : 'Recycle Bag',
+              category : 'bag',
+              type: 'bag',
                 image : '/mockups/img9.jpg',
                 dimensions: {
                   x: 268,
@@ -28,15 +28,15 @@ const app_config = {
                 }
             },
             {
-              name : 'Facebook Website Post',
-              category : 'social-media',
-              type: 'desktop',
+              name : 'Watch',
+              category : 'watch',
+              type: 'time',
                 image : '/mockups/img10.jpg'
             },
             {
-              name : 'Instagram Website Post',
-              category : 'social-media',
-              type: 'desktop',
+              name : 'Mug',
+              category : 'mug',
+              type: 'utensil',
                 image : '/mockups/img3.png',
                 dimensions: {
                   x: 428,
@@ -46,15 +46,22 @@ const app_config = {
                 }
             },
             {
-              name : 'Instagram Website Post',
-              category : 'social-media',
-              type: 'desktop',
-                image : '/mockups/img4.jpg'
+              name : 'T-Shirts',
+              category : 'cloth',
+              type: 'cloth',
+                image : '/mockups/img4.jpg',
+                dimensions: {
+                  x: 592,
+                  y: 371,
+                  width: 194,
+                  height: 224
+                }
+                
             },
             {
-              name : 'Instagram Website Post',
-              category : 'social-media',
-              type: 'desktop',
+              name : 'Pillow',
+              category : 'bedroom',
+              type: 'cover',
                 image : '/mockups/img5.jpg',
                 dimensions: {
                   x: 549,
@@ -64,9 +71,9 @@ const app_config = {
                 }
             },
             {
-              name : 'Instagram Website Post',
-              category : 'social-media',
-              type: 'desktop',
+              name : 'Smart TV',
+              category : 'electronics',
+              type: 'gadgets',
                 image : '/mockups/img11.jpg',
                 dimensions: {
                   x: 402,

@@ -2,9 +2,18 @@ import React from 'react'
 import { useFormik } from 'formik';
 import Swal from 'sweetalert2';
 import { MBDInput, MDBInput } from 'mdb-react-ui-kit';
+import { NavLink, useNavigate } from 'react-router-dom';
+import { useUserContext } from '../../context/UserProvider';
 
 
 const Login = () => {
+
+  const { loggedIn, setLoggedIn } = useUserContext();
+
+  const navigate = useNavigate()
+
+
+
   const loginForm = useFormik({
     initialValues: {
       email: '',
@@ -16,10 +25,10 @@ const Login = () => {
 
       const res = await fetch('http://localhost:5000/user/authenticate', {
         method: 'POST',
+        body: JSON.stringify(values),
         headers: {
           'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(values)
+        }
       });
 
       if (res.status === 200) {
@@ -28,6 +37,14 @@ const Login = () => {
           title: 'Success',
           text: 'Logged in Successfully'
         })
+        const data = (await res.json());
+        setLoggedIn(true);
+        console.log(data);
+        sessionStorage.setItem('user', JSON.stringify(data));
+
+        navigate('/user/browsemockups')
+
+
       } else if (res.status === 401) {
         Swal.fire({
           icon: 'error',
@@ -38,7 +55,7 @@ const Login = () => {
     }
   })
   return (
-    <section className="h-100 " style={{ backgroundImage: "url('https://opengeekslab.com/wp-content/uploads/2019/10/7-tips-on-brand-building-in-2020.png')" }}>
+    <section className="h-100 " style={{ backgroundImage: "url('https://opengeekslab.com/wp-content/uploads/2019/10/7-tips-on-brand-building-in-2020.png')", minHeight: '100vh' }}>
       <div className="container py-5 h-100">
         <div className="row d-flex justify-content-center align-items-center h-100">
           <div className="col-xl-10">
@@ -49,7 +66,7 @@ const Login = () => {
                     <div className="text-center">
                       <h1 className="mt-1 mb-5 pb-1 text-black">Log in</h1>
                     </div>
-                    <form>
+                    <form onSubmit={loginForm.handleSubmit} >
                       <p>Please login to your account</p>
                       <div className="mb-4">
                         <MDBInput label='Username or phone number' type='text' id="email"
@@ -75,9 +92,9 @@ const Login = () => {
                       </div>
                       <div className="d-flex align-items-center justify-content-center pb-4">
                         <p className="mb-0 me-2">Don't have an account?</p>
-                        <button type="button" className="btn btn-outline-danger">
+                        <NavLink type="button" className="btn btn-outline-danger" to="/main/signup">
                           Create new
-                        </button>
+                        </NavLink>
                       </div>
                     </form>
                   </div>
